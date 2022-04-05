@@ -1,15 +1,15 @@
 package model.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.mysql.cj.api.jdbc.Statement;
 
 import db.DB;
 import db.DbException;
@@ -18,14 +18,12 @@ import model.entities.Department;
 import model.entities.Seller;
 
 public class SellerDaoJDBC implements SellerDao {
-
+	
 	private Connection conn;
 	
 	public SellerDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
-	
-	//Inserindo dados
 	
 	@Override
 	public void insert(Seller obj) {
@@ -40,7 +38,7 @@ public class SellerDaoJDBC implements SellerDao {
 			
 			st.setString(1, obj.getName());
 			st.setString(2, obj.getEmail());
-			st.setDate(3, new Date(obj.getBirthdate().getTime()));
+			st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
 			st.setDouble(4, obj.getBaseSalary());
 			st.setInt(5, obj.getDepartment().getId());
 			
@@ -66,8 +64,6 @@ public class SellerDaoJDBC implements SellerDao {
 		}
 	}
 
-	//Atualizando dados
-	
 	@Override
 	public void update(Seller obj) {
 		PreparedStatement st = null;
@@ -79,7 +75,7 @@ public class SellerDaoJDBC implements SellerDao {
 			
 			st.setString(1, obj.getName());
 			st.setString(2, obj.getEmail());
-			st.setDate(3, new Date(obj.getBirthdate().getTime()));
+			st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
 			st.setDouble(4, obj.getBaseSalary());
 			st.setInt(5, obj.getDepartment().getId());
 			st.setInt(6, obj.getId());
@@ -94,8 +90,6 @@ public class SellerDaoJDBC implements SellerDao {
 		}
 	}
 
-	//Deletando dados
-	
 	@Override
 	public void deleteById(Integer id) {
 		PreparedStatement st = null;
@@ -105,13 +99,6 @@ public class SellerDaoJDBC implements SellerDao {
 			st.setInt(1, id);
 			
 			st.executeUpdate();
-			
-			/*int rows = st.executeUpdate();
-			
-			if (rows == 0) {
-				throw new DbException("Unexpected error! There's nothing to be deleted on that line");
-			}*/
-			
 		}
 		catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -121,8 +108,6 @@ public class SellerDaoJDBC implements SellerDao {
 		}
 	}
 
-	//Buscando por ID
-	
 	@Override
 	public Seller findById(Integer id) {
 		PreparedStatement st = null;
@@ -158,7 +143,7 @@ public class SellerDaoJDBC implements SellerDao {
 		obj.setName(rs.getString("Name"));
 		obj.setEmail(rs.getString("Email"));
 		obj.setBaseSalary(rs.getDouble("BaseSalary"));
-		obj.setBirthdate(new java.util.Date(rs.getTimestamp("BirthDate").getTime())); 
+		obj.setBirthDate(new java.util.Date(rs.getTimestamp("BirthDate").getTime()));
 		obj.setDepartment(dep);
 		return obj;
 	}
@@ -170,8 +155,6 @@ public class SellerDaoJDBC implements SellerDao {
 		return dep;
 	}
 
-	//Buscando todos os ID
-	
 	@Override
 	public List<Seller> findAll() {
 		PreparedStatement st = null;
@@ -210,8 +193,6 @@ public class SellerDaoJDBC implements SellerDao {
 			DB.closeResultSet(rs);
 		}
 	}
-	
-	//Buscando por departamento
 
 	@Override
 	public List<Seller> findByDepartment(Department department) {
